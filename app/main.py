@@ -30,7 +30,10 @@ def crop():
             return jsonify({'error': 'no file'})
         if not allowed_file(file.filename):
             return jsonify({'error': 'format not supported'})
-
+        if not os.path.exists(os.path.join('app','images')):
+            os.makedirs(os.path.join('app','images'))
+        if not os.path.exists(os.path.join('app','results')):
+            os.makedirs(os.path.join('app','results'))
         image_name = "image.jpg"
         file.save(os.path.join('app', 'images', file.filename))
         model()
