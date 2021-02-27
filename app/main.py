@@ -35,6 +35,12 @@ def crop():
         file.save(os.path.join('app', 'images', file.filename))
         model()
         image = actions()
+        files = glob.glob('app/results/*')
+        for f in files:
+            os.remove(f)        
+        files = glob.glob('app/images/*')
+        for f in files:
+            os.remove(f)     
         data = {'image': image}
         return jsonify(data)
     #move images to /images directory
@@ -89,7 +95,7 @@ def actions():
 
         buffer = io.BytesIO()
         result_img.save(buffer,format="PNG")
-        myimage = buffer.getvalue()                     
+        myimage = buffer.getvalue()       
         return "data:image/png;base64,"+base64.b64encode(myimage).decode('ascii')
     
    
