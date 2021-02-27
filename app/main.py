@@ -32,13 +32,13 @@ def crop():
             return jsonify({'error': 'format not supported'})
 
         image_name = "image.jpg"
-        file.save(os.path.join(os.path.dirname('/', 'images', file.filename))
+        file.save(os.path.join('app', 'images', file.filename))
         model()
         image = actions()
-        files = glob.glob(os.path.join(os.path.dirname('/', 'images', '*'))
+        files = glob.glob(os.path.join('app', 'images', '*'))
         for f in files:
             os.remove(f)        
-        files = glob.glob(os.path.join(os.path.dirname('/', 'results', '*'))
+        files = glob.glob(os.path.join('app', 'results', '*'))
         for f in files:
             os.remove(f)     
         data = {'image': image}
@@ -53,7 +53,7 @@ def crop():
 
 
 def actions():
-    image_dir = os.path.join(os.path.dirname('/', 'images')
+    image_dir = os.path.join('app', 'images')
     names = [name[:-4] for name in os.listdir(image_dir)]
     THRESHOLD = 0.9
     RESCALE = 255
@@ -64,7 +64,7 @@ def actions():
     for name in names:
         # BACKGROUND REMOVAL
         file_name = name + '.png'
-        output = Image.open(os.path.join(os.path.dirname('/', 'results', file_name))
+        output = Image.open(os.path.join('app', 'results', file_name))
         out_img = np.array(output, np.float64)
         out_img /= RESCALE
 
@@ -78,7 +78,7 @@ def actions():
         rgba_out = np.append(out_img,a_layer,axis=2)
 
         file_name = name+'.jpg'
-        input = Image.open(os.path.join(os.path.dirname('/', 'images', file_name))
+        input = Image.open(os.path.join('app', 'images', file_name))
         inp_img = np.array(input, np.float64)
         inp_img /= RESCALE
 
