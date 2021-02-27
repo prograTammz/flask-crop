@@ -11,7 +11,7 @@ import cv2
 from app.u2net_test import main as model
 
 ALLOWED_EXTENSIONS = {'jpg'}
-UPLOAD_FOLDER = 'images'
+UPLOAD_FOLDER = 'app/images'
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -31,11 +31,11 @@ def crop():
         if not allowed_file(file.filename):
             return jsonify({'error': 'format not supported'})
 
-        img_bytes = file.read()
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
-        main()
+        image_name = "image.jpg"
+        file.save(os.path.join('app', 'images', file.filename))
+        model()
         image = actions()
-        data = {'stats': image}
+        data = {'image': image}
         return jsonify(data)
     #move images to /images directory
     #run the model
@@ -47,7 +47,7 @@ def crop():
 
 
 def actions():
-    image_dir = os.path.join(os.getcwd(), 'images')
+    image_dir = os.path.join('app', 'images')
     names = [name[:-4] for name in os.listdir(image_dir)]
     THRESHOLD = 0.9
     RESCALE = 255
@@ -57,7 +57,8 @@ def actions():
     SAL_SHIFT = 100
     for name in names:
         # BACKGROUND REMOVAL
-        output = Image.open('results/'+name+'.png')
+        file_name = name + '.png'
+        output = Image.open(os.path.join('app', 'results', file_name))
         out_img = np.array(output, np.float64)
         out_img /= RESCALE
 
@@ -70,7 +71,8 @@ def actions():
         a_layer = mul_layer*a_layer_init
         rgba_out = np.append(out_img,a_layer,axis=2)
 
-        input = Image.open('images/'+name+'.jpg')
+        file_name = name+'.jpg'
+        input = Image.open(os.path.join('app', 'images', file_name))
         inp_img = np.array(input, np.float64)
         inp_img /= RESCALE
 
@@ -85,6 +87,9 @@ def actions():
         result_img = Img.fromarray(rem_back.astype('uint8'), 'RGBA')
         result_img = result_img.filter(ImageFilter.SMOOTH)
 
-        return result_img
+        buffer = io.BytesIO()
+        result_img.save(buffer,format="PNG")
+        myimage = buffer.getvalue()                     
+        return "data:image/png;base64,"+base64.b64encode(myimage).decode('ascii')
     
    

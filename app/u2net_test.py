@@ -18,8 +18,8 @@ from app.data_loader import ToTensor
 from app.data_loader import ToTensorLab
 from app.data_loader import SalObjDataset
 
-from model import U2NET # full size version 173.6 MB
-from model import U2NETP # small version u2net 4.7 MB
+from app.model import U2NET # full size version 173.6 MB
+from app.model import U2NETP # small version u2net 4.7 MB
 
 # normalize the predicted SOD probability map
 def normPRED(d):
@@ -58,12 +58,11 @@ def main():
 
 
 
-    image_dir = os.path.join(os.getcwd(), 'images') # changed to 'images' directory which is populated while running the script
-    prediction_dir = os.path.join(os.getcwd(), 'results/') # changed to 'results' directory which is populated after the predictions
-    model_dir = os.path.join(os.getcwd(), model_name + '.pth') # path to u2netp pretrained weights
+    image_dir = os.path.join('app', 'images') # changed to 'images' directory which is populated while running the script
+    prediction_dir = os.path.join('app', 'results/') # changed to 'results' directory which is populated after the predictions
+    model_dir = os.path.join('app', model_name + '.pth') # path to u2netp pretrained weights
 
     img_name_list = glob.glob(image_dir + os.sep + '*')
-    print(img_name_list)
 
     # --------- 2. dataloader ---------
     #1. dataloader
@@ -77,6 +76,7 @@ def main():
                                         shuffle=False,
                                         num_workers=1)
 
+
     # --------- 3. model define ---------
     net = U2NETP(3,1)    
     if torch.cuda.is_available():
@@ -89,8 +89,6 @@ def main():
 
     # --------- 4. inference for each image ---------
     for i_test, data_test in enumerate(test_salobj_dataloader):
-
-        print("inferencing:",img_name_list[i_test].split(os.sep)[-1])
 
         inputs_test = data_test['image']
         inputs_test = inputs_test.type(torch.FloatTensor)
