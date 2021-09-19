@@ -49,7 +49,9 @@ def crop():
         for f in files:
             os.remove(f)     
         data = {'image': image}
-        return jsonify(data)
+        response = jsonify(data)
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
     #move images to /images directory
     #run the model
     #process each image and from /results
