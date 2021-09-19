@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 from PIL import Image
 import base64
 import io
@@ -14,7 +15,9 @@ ALLOWED_EXTENSIONS = {'jpg'}
 UPLOAD_FOLDER = 'app/images'
 
 app = Flask(__name__)
+cors = CORS(app)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 def allowed_file(filename):
@@ -22,6 +25,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/crop', methods=['POST'])
+@cross_origin()
 
 def crop():
     if request.method == 'POST':
