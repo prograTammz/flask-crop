@@ -50,7 +50,6 @@ def crop():
             os.remove(f)     
         data = {'image': image}
         response = jsonify(data)
-        response.headers.add("Access-Control-Allow-Origin", "*")
         return response
     #move images to /images directory
     #run the model
