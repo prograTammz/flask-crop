@@ -2,8 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 import numpy as np
 import io
-import os
-import glob
+import base64
 from PIL import Image
 from rembg.bg import remove
 
@@ -30,10 +29,11 @@ def crop():
             return jsonify({'error': 'no file'})
         if not allowed_file(file.filename):
             return jsonify({'error': 'format not supported'})
-        image = np.fromfile(file)
-        result = remove(image)
-        img = Image.open(io.BytesIO(result)).convert("RGBA")
-        data = {'image': img}
+        imageBinary = np.fromfile(file)
+        result = remove(imageBinary)
+        image = Image.open(io.BytesIO(result)).convert("RGBA")
+        data = {'image': image}
+        base64Image = "data:image/png;base64,"+base64.b64encode(image).decode('ascii') 
         response = jsonify(data)
         return response
 
