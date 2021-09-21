@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
+import numpy as np
 import io
 import os
 import glob
@@ -29,9 +30,10 @@ def crop():
             return jsonify({'error': 'no file'})
         if not allowed_file(file.filename):
             return jsonify({'error': 'format not supported'})
-        image = Image.open(file)
+        image = np.fromfile(file)
         result = remove(image)
-        data = {'image': result}
+        img = Image.open(io.BytesIO(result)).convert("RGBA")
+        data = {'image': img}
         response = jsonify(data)
         return response
 
