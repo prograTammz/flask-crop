@@ -31,9 +31,9 @@ def crop():
             return jsonify({'error': 'format not supported'})
         imageBinary = np.fromfile(file)
         result = remove(imageBinary)
-        image = Image.open(io.BytesIO(result)).convert("RGBA")
-        data = {'image': image}
-        base64Image = "data:image/png;base64,"+base64.b64encode(image).decode('ascii') 
+        image = io.BytesIO(result)
+        base64Image = "data:image/png;base64,"+base64.b64encode(result).decode('ascii') 
+        data = {'image': base64Image}
         response = jsonify(data)
         return response
 
