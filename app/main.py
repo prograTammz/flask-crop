@@ -29,8 +29,8 @@ def crop():
             return jsonify({'error': 'no file'})
         if not allowed_file(file.filename):
             return jsonify({'error': 'format not supported'})
-        print(file)
-        result = remove(file)
+        image = Image.open(file)
+        result = remove(image)
         data = {'image': result}
         response = jsonify(data)
         return response
