@@ -3,11 +3,12 @@ from flask_cors import CORS, cross_origin
 import numpy as np
 import io
 import base64
-from PIL import Image
+from PIL import ImageFile
 from rembg.bg import remove
 
 ALLOWED_EXTENSIONS = {'jpg'}
 UPLOAD_FOLDER = 'app/images'
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 app = Flask(__name__)
 cors = CORS(app)
