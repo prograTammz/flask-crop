@@ -31,7 +31,7 @@ def crop():
         if not allowed_file(file.filename):
             return jsonify({'error': 'format not supported'})
         imageBinary = np.fromfile(file)
-        result = remove(imageBinary)
+        result = remove(imageBinary, "u2net", True)
         image = io.BytesIO(result)
         base64Image = "data:image/png;base64,"+base64.b64encode(result).decode('ascii') 
         data = {'image': base64Image}
